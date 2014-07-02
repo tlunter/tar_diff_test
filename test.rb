@@ -1,11 +1,9 @@
-require 'pry'
 require 'zlib'
 require 'archive/tar/minitar'
 
 BASE = 'swipely.tar'
 NEW  = 'swipely-image.tar'
-
-OUT  = STDOUT
+OUT  = 'output.tar'
 
 HEADER_UNPACK_FORMAT  = "Z100A8A8A8A12A12A8aZ100A6A2Z32Z32A8A8Z155"
 
@@ -54,12 +52,13 @@ def read_entry(io)
 end
 
 begin
-  sgz = File.open("output.tar", 'wb')#Zlib::GzipWriter.new(OUT)
+  sgz = File.open(OUT, 'wb')
 
-  bgz = File.open(BASE, 'rb')#Zlib::GzipReader.open(BASE)
+  bgz = File.open(BASE, 'rb')
+  #bgz = Zlib::GzipReader.open(BASE)
   base_enumerator = to_enum(:read_entry, bgz)
 
-  ngz = File.open(NEW, 'rb')#Zlib::GzipReader.open(NEW)
+  ngz = File.open(NEW, 'rb')
   new_enumerator = to_enum(:read_entry, ngz)
 
   diff_files = 0
